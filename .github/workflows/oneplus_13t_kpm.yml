@@ -25,7 +25,7 @@ on:
       KERNEL_NAME:
         type: string
         required: false
-        default: '-android15-8-g013ec21bba94-383916444
+        default: '-android15-8-g013ec21bba94-383916444'
       kernelsu_variant:
         type: string
         required: false

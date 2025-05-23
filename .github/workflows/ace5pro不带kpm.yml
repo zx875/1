@@ -26,6 +26,11 @@ on:
         description: "修改内核名称"
         required: true
         default: '-android15-8-g013ec21bba94-abogki383916444'
+      local_version:
+        description: 'CONFIG_LOCALVERSION value (optional, default: "-4k")'
+        required: false
+        default: '-4k'
+        type: string
 
 jobs:
   build:
@@ -120,6 +125,12 @@ jobs:
          else
          echo "❗ lz4kd patch not found for kernel version ${{ inputs.KERNEL_VERSION }}"
          fi
+
+      - name: Set CONFIG_LOCALVERSION
+        run: |
+          cd kernel_workspace/kernel_platform
+          echo "Local version: ${{ github.event.inputs.LOCAL_VERSION }}"
+          sed -i "s/CONFIG_LOCALVERSION=\"-4k\"/CONFIG_LOCALVERSION=\"${{ github.event.inputs.LOCAL_VERSION }}\"/" ./common/arch/arm64/configs/gki_defconfig
            
       - name: Add SUSFS Configuration Settings
         run: |

@@ -116,7 +116,6 @@ jobs:
           sed -i "s/DKSU_VERSION=16/DKSU_VERSION=${KSU_VERSION}/" kernel/Makefile
           
       - name: Set up SUSFS & apply patches
-      - name: Set up SUSFS & apply patches
         run: |
          set -e
 

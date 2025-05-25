@@ -9,7 +9,7 @@ on:
         default: '-android15-8-g013ec21bba94-abogki383916444'
         type: string
       local_version:
-        description: 'CONFIG_LOCALVERSION value (默认"-4k")'
+        description: '是否修改内核后缀名？ (默认"-4k")'
         required: false
         default: '-4k'
         type: string

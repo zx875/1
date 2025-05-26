@@ -83,20 +83,21 @@ jobs:
         run: |
          cd kernel_workspace/kernel_platform
 
-         # 下载 setup.sh
          curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" -o setup.sh
-
-         # 替换版本号生成逻辑为固定值
          sed -i 's/git rev-list --count main/echo 66666/' setup.sh
-
-         # 执行替换过的脚本
          bash setup.sh susfs-dev
-         # setup.sh 执行完之后，再彻底替换所有 git rev-list 获取版本的地方
+
          cd KernelSU
 
-         # 精准改 Makefile 中 DKSU_VERSION 的赋值语句（这个版本号就是最终输出的）
-         sed -i 's/^DKSU_VERSION := .*/DKSU_VERSION := 66666/' kernel/Makefile
-    
+         # 屏蔽所有 git 操作（让版本号 fallback）
+         export GIT_DIR=/dev/null
+
+         # 或者手动替换 Makefile 中真正的版本定义
+         find . -type f -name Makefile -exec sed -i 's/git rev-list --count.*/echo 66666/' {} \;
+
+         # 验证
+         grep -r DKSU_VERSION
+  
       - name: Set up SUSFS & apply patches
         run: |
          set -e

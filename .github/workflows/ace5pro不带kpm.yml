@@ -82,21 +82,16 @@ jobs:
       - name: Set up SukiSU
         run: |
          cd kernel_workspace/kernel_platform
+
          # 下载并执行 SukiSU 安装脚本
-         curl -LSs "https://raw.githubusercontent.com/ShirkNeko/SukiSU-Ultra/main/kernel/setup.sh" | bash -s susfs-dev
+         curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" -o setup.sh
+         bash setup.sh susfs-dev
 
-         # 进入 KernelSU 目录
-         cd ./KernelSU
+         # 修改 setup.sh 中的版本号生成方式
+         sed -i 's/git rev-list --count main/echo 66666/' setup.sh
 
-         # 强制指定版本号
-         KSU_VERSION=66666
-
-         # 写入环境变量（供后续步骤使用）
-         echo "KSUVER=$KSU_VERSION" >> $GITHUB_ENV
-         export KSU_VERSION=$KSU_VERSION
-
-         # 替换 kernel/Makefile 中的 DKSU_VERSION
-         sed -i "s/DKSU_VERSION=[0-9]\+/DKSU_VERSION=${KSU_VERSION}/" kernel/Makefile
+         # 重新执行修改后的 setup.sh
+         bash setup.sh susfs-dev
       
       - name: Set up SUSFS & apply patches
         run: |

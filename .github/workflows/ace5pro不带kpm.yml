@@ -79,28 +79,24 @@ jobs:
          rm kernel_platform/common/android/abi_gki_protected_exports_* || echo "No protected exports!"
          rm kernel_platform/msm-kernel/android/abi_gki_protected_exports_* || echo "No protected exports!"
          
-      - name: Patch KernelSU version
+      - name: Set up SukiSU
         run: |
          cd kernel_workspace/kernel_platform
+         # 下载并执行 SukiSU 安装脚本
          curl -LSs "https://raw.githubusercontent.com/ShirkNeko/SukiSU-Ultra/main/kernel/setup.sh" | bash -s susfs-dev
-         cd KernelSU
 
-         # 用户设定版本号
-         KSU_VERSION="66666"
+         # 进入 KernelSU 目录
+         cd ./KernelSU
+
+         # 强制指定版本号
+         KSU_VERSION=66666
+
+         # 写入环境变量（供后续步骤使用）
          echo "KSUVER=$KSU_VERSION" >> $GITHUB_ENV
+         export KSU_VERSION=$KSU_VERSION
 
-         # 替换 Makefile 的 DKSU_VERSION（用于构建版本号）
-         sed -i "s/DKSU_VERSION=[0-9]\+/DKSU_VERSION=${KSU_VERSION}/" kernel/Makefile || echo "Makefile patch failed!"
-
-         # 自动查找并替换 kernelsu_base.h 中的版本宏
-         HEADER_FILE=$(find kernel -type f -name kernelsu_base.h | head -n1)
-         if [ -f "$HEADER_FILE" ]; then
-         echo "Found header: $HEADER_FILE"
-         sed -i "s/#define KSU_KERNEL_VER .*/#define KSU_KERNEL_VER (${KSU_VERSION})/" "$HEADER_FILE"
-         else
-         echo "kernelsu_base.h not found!"
-         exit 1
-         fi
+         # 替换 kernel/Makefile 中的 DKSU_VERSION
+         sed -i "s/DKSU_VERSION=[0-9]\+/DKSU_VERSION=${KSU_VERSION}/" kernel/Makefile
       
       - name: Set up SUSFS & apply patches
         run: |

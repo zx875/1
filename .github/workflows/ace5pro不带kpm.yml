@@ -93,7 +93,8 @@ jobs:
          sed -i "s/DKSU_VERSION=[0-9]\+/DKSU_VERSION=${KSU_VERSION}/" kernel/Makefile
 
          # 修改头文件，彻底控制版本号输出
-         sed -i "s/#define KSU_KERNEL_VER .*/#define KSU_KERNEL_VER (${KSU_VERSION})/" kernel/kernelsu_base.h
+         find . -name kernelsu_base.h
+         sed -i "s/#define KSU_KERNEL_VER .*/#define KSU_KERNEL_VER (${KSU_VERSION})/" kernel/include/kernelsu/kernelsu_base.h
       
       - name: Set up SUSFS & apply patches
         run: |

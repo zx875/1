@@ -91,6 +91,10 @@ jobs:
 
          # 执行替换过的脚本
          bash setup.sh susfs-dev
+         # setup.sh 执行完之后，再彻底替换所有 git rev-list 获取版本的地方
+         cd KernelSU
+         find . -type f -exec sed -i 's/git rev-list --count main/echo 66666/g' {} +
+         sed -i 's/DKSU_VERSION=[0-9]\+/DKSU_VERSION=66666/' kernel/Makefile
     
       - name: Set up SUSFS & apply patches
         run: |

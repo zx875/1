@@ -88,8 +88,8 @@ jobs:
          KSU_VERSION="${{ inputs.kernelsu_version }}"
          echo "KSUVER=$KSU_VERSION" >> $GITHUB_ENV
          export KSU_VERSION=$KSU_VERSION
-         # 替换内核版本号
-         sed -i "s/DKSU_VERSION=12800/DKSU_VERSION=${KSU_VERSION}/" kernel/Makefile
+         # 更通用地替换 DKSU_VERSION，不管原始是多少
+         sed -i "s/DKSU_VERSION=[0-9]\+/DKSU_VERSION=${KSU_VERSION}/" kernel/Makefile
          
       - name: Set up SUSFS & apply patches
         run: |

@@ -34,7 +34,7 @@ on:
       kernelsu_version:
        description: '设置 KSUVER，自定义版本号'
        required: false
-       default: '15000'
+       default: '66666'
 
 jobs:
   build:

@@ -79,17 +79,19 @@ jobs:
          rm kernel_platform/common/android/abi_gki_protected_exports_* || echo "No protected exports!"
          rm kernel_platform/msm-kernel/android/abi_gki_protected_exports_* || echo "No protected exports!"
          
-      - name: Set up SukiSU
+      - name: Add SukiSU-Ultra
+        if: ${{ inputs.kernelsu_variant == 'SukiSU-Ultra' }}
         run: |
          cd kernel_workspace/kernel_platform
+         # 注意：此处运行完 setup.sh 后才进入 KernelSU 修改版本
          curl -LSs "https://raw.githubusercontent.com/ShirkNeko/SukiSU-Ultra/main/kernel/setup.sh" | bash -s susfs-dev
-         cd ./KernelSU
-         # 使用用户输入的版本号
+         cd KernelSU
          KSU_VERSION="${{ inputs.kernelsu_version }}"
          echo "KSUVER=$KSU_VERSION" >> $GITHUB_ENV
          export KSU_VERSION=$KSU_VERSION
-         # 更通用地替换 DKSU_VERSION，不管原始是多少
+         # 确保 setup.sh checkout 完后再修改 Makefile 中版本
          sed -i "s/DKSU_VERSION=[0-9]\+/DKSU_VERSION=${KSU_VERSION}/" kernel/Makefile
+         cat kernel/Makefile | grep DKSU_VERSION
          
       - name: Set up SUSFS & apply patches
         run: |

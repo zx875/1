@@ -85,11 +85,8 @@ jobs:
 
          # 下载并执行 SukiSU 安装脚本
          curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" -o setup.sh
-         bash setup.sh susfs-dev
-
          # 修改 setup.sh 中的版本号生成方式
          sed -i 's/git rev-list --count main/echo 66666/' setup.sh
-
          # 重新执行修改后的 setup.sh
          bash setup.sh susfs-dev
       

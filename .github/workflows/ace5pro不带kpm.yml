@@ -85,17 +85,20 @@ jobs:
 
          curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" -o setup.sh
          sed -i 's/git rev-list --count main/echo 66666/' setup.sh
-         bash setup.sh susfs-dev 
-         
+         bash setup.sh susfs-dev
+
          cd KernelSU
 
-         # 删除原有版本号生成逻辑块
+         # 删除原来的 ifdef 块
          sed -i '/^ifdef KSU_GIT_VERSION/,/^endif/d' kernel/Makefile
-         
-         # 删除旧的 $(eval KSU_VERSION=...) 行
+
+         # 删除旧的 eval 定义
          sed -i '/^\$(eval KSU_VERSION=\$(shell expr/d' kernel/Makefile
 
-         # 写入新的固定版本号
+         # 删除默认写死的 12800 行
+         sed -i '/ccflags-y += -DKSU_VERSION=12800/d' kernel/Makefile
+
+         # 注入自定义版本号
          echo "KSU_VERSION := 66666" >> kernel/Makefile
          echo 'ccflags-y += -DKSU_VERSION=$(KSU_VERSION)' >> kernel/Makefile
 

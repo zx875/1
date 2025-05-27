@@ -91,6 +91,9 @@ jobs:
 
          # 删除原有版本号生成逻辑块
          sed -i '/^ifdef KSU_GIT_VERSION/,/^endif/d' kernel/Makefile
+         
+         # 删除旧的 $(eval KSU_VERSION=...) 行
+         sed -i '/^\$(eval KSU_VERSION=\$(shell expr/d' kernel/Makefile
 
          # 写入新的固定版本号
          echo "KSU_VERSION := 66666" >> kernel/Makefile
